@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ClientesController;
+use PDF;
+use App\Models\Cliente;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +34,15 @@ Route::resource('Cliente', ClientesController::class);
 Route::get("/idioma/{pais?}",function ($pais="es"){
     Session::put('locale', $pais);
     return redirect()->back();
+});
+
+
+Route::get("imprimir",function(){
+
+    $clientes=Cliente::all();
+
+
+    $pdf = PDF::loadView('factura',compact("clientes"));
+
+    return $pdf->download('invoice.pdf');
 });
