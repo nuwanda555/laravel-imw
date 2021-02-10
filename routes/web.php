@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ClientesController;
-use PDF;
 use App\Models\Cliente;
+use App\Http\Livewire\Clientes;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,12 +37,21 @@ Route::get("/idioma/{pais?}",function ($pais="es"){
 });
 
 
+Route::view("/qr","qr");
+
+Route::get("/componente",Clientes::class);
+
+
 Route::get("imprimir",function(){
 
     $clientes=Cliente::all();
 
 
-    $pdf = PDF::loadView('factura',compact("clientes"));
+    $pdf = PDF::loadView('factura',compact("clientes"))->setPaper('a4', 'landscape');
 
     return $pdf->download('invoice.pdf');
 });
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
